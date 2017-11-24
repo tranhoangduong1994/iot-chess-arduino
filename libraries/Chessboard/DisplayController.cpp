@@ -2,6 +2,8 @@
 
 #include <LiquidCrystal_I2C.h>
 
+#include <MessageController.h>
+
 DisplayController* DisplayController::instance = NULL;
 
 // set the LCD address to 0x20 for a 20 chars 4 line display
@@ -33,4 +35,14 @@ void DisplayController::print(int line, const char* content) {
 	lcd.print(clearingString);
 	lcd.setCursor(0, line);
 	lcd.print(content);
+}
+
+void DisplayController::onPrintRequest(int line, String content) {
+	lcd.print(line, content);
+	MessageController::getInstance()->reply(ReplyingType::PRINT_DONE);
+}
+
+void DisplayController::onClearScreenRequest() {
+	lcd.clear();
+	MessageController::getInstance()->reply(ReplyingType::CLEAR_SCREEN_DONE);
 }

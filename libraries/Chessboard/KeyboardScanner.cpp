@@ -18,12 +18,12 @@ KeyboardScanner* KeyboardScanner::getInstance() {
 	return instance;
 }
 
-Key KeyboardScanner::scan() {
+void KeyboardScanner::scan() {
 	int value = 0;
 
 	if (digitalRead(DOWN) == LOW && !downPressed) {
 		downPressed = true;
-		return Key::KEY_DOWN;
+		MessageController::getInstance()->send(SendingType::DOWN_PRESSED);
 	}
 
 	if (digitalRead(DOWN) == HIGH && downPressed) {
@@ -32,7 +32,7 @@ Key KeyboardScanner::scan() {
 
 	if (digitalRead(UP) == LOW && !upPressed) {
 		upPressed = true;
-		return Key::KEY_UP;
+		MessageController::getInstance()->send(SendingType::UP_PRESSED);
 	}
 
 	if (digitalRead(UP) == HIGH && upPressed) {
@@ -41,7 +41,7 @@ Key KeyboardScanner::scan() {
 
 	if (digitalRead(MENU) == LOW && !menuPressed) {
 		menuPressed = true;
-		return Key::KEY_MENU;
+		MessageController::getInstance()->send(SendingType::MENU_PRESSED);
 	}
 
 	if (digitalRead(MENU) == HIGH && menuPressed) {
@@ -50,7 +50,7 @@ Key KeyboardScanner::scan() {
 
 	if (digitalRead(OK) == LOW && !okPressed) {
 		okPressed = true;
-		return Key::KEY_OK;
+		MessageController::getInstance()->send(SendingType::OK_PRESSED);
 	}
 
 	if (digitalRead(OK) == HIGH && okPressed) {

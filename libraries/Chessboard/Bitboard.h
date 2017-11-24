@@ -1,5 +1,5 @@
-#ifndef __BoardScanner__
-#define __BoardScanner__
+#ifndef __Bitboard__
+#define __Bitboard__
 
 struct Bitboard {
 	unsigned long first32;
@@ -10,23 +10,23 @@ struct Bitboard {
 		last32 = 0;
 	}
 
-	void set(int bitNumber, unsigned long value) {
-		if (bitNumber > 63 || bitNumber < 0) {
+	void set(int index, unsigned long value) {
+		if (index > 63 || index < 0) {
 			return;
 		}
 
-		if (bitNumber > 31) {
-			last32 &= ~(value << (bitNumber - 32));
-			last32 |= (value << (bitNumber - 32));
+		if (index > 31) {
+			last32 &= ~(value << (index - 32));
+			last32 |= (value << (index - 32));
 			return;
 		}
 
-		first32 &= ~(value << bitNumber);
-		first32 |= (value << bitNumber);
+		first32 &= ~(value << index);
+		first32 |= (value << index);
 	}
 
 	const char* toString() {
-		static char string[64] = {'0'};
+		static char string[65] = {0};
 		unsigned long f32 = first32, l32 = last32;
 
 	    for (int i = 0; i < 32; i++) {
@@ -46,18 +46,14 @@ struct Bitboard {
 		result.last32 = this->last32 ^ other.last32;
 		return result;
 	}
-};
 
-class BoardScanner {
-public:
-	Bitboard scan();
+	bool getBitByIndex(int index) {
+		if (index > 31) {
+			return last32 & (1 << (index - 1));
+		}
 
-	static BoardScanner* getInstance();
-private:
-	void init();
-
-	BoardScanner() {}
-	static BoardScanner* instance;
+		return first32 & (1 << (index - 1));
+	}
 };
 
 #endif

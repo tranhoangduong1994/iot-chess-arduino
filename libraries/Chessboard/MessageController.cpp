@@ -16,7 +16,7 @@ MessageController* MessageController::getInstance() {
 void MessageController::init() {
 	commandBuffer = "";
 	motorsDelegate = NULL;
-	scannerDelegate = NULL;
+	switchesDelegate = NULL;
 	displayerDelegate = NULL;
 }
 
@@ -56,8 +56,8 @@ void MessageController::translateMessage() {
 	}
 
 	if (commandBuffer[0] == MessageType::SCAN_BOARD) {
-		if (scannerDelegate) {
-			scannerDelegate->onScanRequest();
+		if (switchesDelegate) {
+			switchesDelegate->onScanRequest();
 		}
 	}
 
@@ -87,19 +87,26 @@ void MessageController::checkMessage() {
 	}
 }
 
-void MessageController::reply(MessageType type, const String& content) {
-	// Serial.print(message);
-	// Serial.flush();
+void MessageController::reply(ReplyingType type, String content) {
+	content += MESSAGE_ENDING_CHAR;
+	Serial.print(String(type) + content);
+	Serial.flush();
+}
+
+void MessageController::send(SendingType type, String content) {
+	content += MESSAGE_ENDING_CHAR;
+	Serial.print(String(type) + content);
+	Serial.flush();
 }
 
 void MessageController::setMotorsControllerMessageDelegate(MotorsControllerMessageProtocol* delegate) {
 	motorsDelegate = delegate;
 }
 
-void MessageController::setBoardScannnerMessageDelegate(BoardScannerMessageProtocol* delegate) {
-	scannerDelegate = delegate;
+void MessageController::setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate) {
+	switchesDelegate = delegate;
 }
 
-void MessageController::setDisolayControllerMessageDelegate(DisplayControllerMessageProtocol* delegate) {
+void MessageController::setDisplayControllerMessageDelegate(DisplayControllerMessageProtocol* delegate) {
 	displayerDelegate = delegate;
 }

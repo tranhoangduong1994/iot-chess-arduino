@@ -10,8 +10,9 @@ enum Key {
 
 class KeyboardScanner {
 public:
+	void scan();
+
 	static KeyboardScanner* getInstance();
-	Key scan();
 
 private:
 	bool downPressed;

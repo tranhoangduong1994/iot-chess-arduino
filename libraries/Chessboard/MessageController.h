@@ -11,10 +11,26 @@ enum MessageType {
 	CLEAR_SCREEN,
 	PRINT,
 	MOVE,
-	CAPTURE,
 	SCAN_BOARD,
 	RESET_BOARD
 };
+
+enum ReplyingType {
+	CLEAR_SCREEN_DONE,
+	PRINT_DONE,
+	MOVE_FAILED,
+	MOVE_DONE,
+	SCAN_DONE,
+	RESET_DONE
+};
+
+enum SendingType {
+	BOARD_CHANGED,
+	UP_PRESSED,
+	DOWN_PRESSED,
+	MENU_PRESSED,
+	OK_PRESSED
+}
 
 class MotorsControllerMessageProtocol {
 public:
@@ -22,27 +38,27 @@ public:
 	virtual void onResetRequest() = 0;
 };
 
-class BoardScannerMessageProtocol {
+class SwitchesControllerMessageProtocol {
 public:
 	virtual void onScanRequest() = 0;
 };
 
 class DisplayControllerMessageProtocol {
 public:	
-	virtual void onPrintRequest(int line, const String& content) = 0;
+	virtual void onPrintRequest(int line, String content) = 0;
 	virtual void onClearScreenRequest() = 0;
-	virtual void onResetRequest() = 0;
 };
 
 
 class MessageController {
 public:
 	void checkMessage();
-	void reply(MessageType type, const String& content);
+	void reply(ReplyingType type, String content = "");
+	void send(SendingType type, String content = "");
 
 	void setMotorsControllerMessageDelegate(MotorsControllerMessageProtocol* delegate);
-	void setBoardScannnerMessageDelegate(BoardScannerMessageProtocol* delegate);
-	void setDisolayControllerMessageDelegate(DisplayControllerMessageProtocol* delegate);
+	void setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate);
+	void setDisplayControllerMessageDelegate(DisplayControllerMessageProtocol* delegate);
 
 	static MessageController* getInstance();
 
@@ -53,7 +69,7 @@ private:
 	String commandBuffer;
 
 	MotorsControllerMessageProtocol* motorsDelegate;
-	BoardScannerMessageProtocol* scannerDelegate;
+	SwitchesControllerMessageProtocol* switchesDelegate;
 	DisplayControllerMessageProtocol* displayerDelegate;
 
 	MessageController() {}

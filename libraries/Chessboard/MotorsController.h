@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #include <DataTypes.h>
-#include <MessageController.h>
 
 class MotorsController : public MotorsControllerMessageProtocol {
 public:

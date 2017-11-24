@@ -2,6 +2,8 @@
 
 #include <Arduino.h> 
 
+#include <MessageController.h>
+
 #define MAGNET 8
 
 #define DIR_X A1
@@ -291,9 +293,11 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
 
     Point sideSquare = getPointByPosition(Position('h', to.rank));
     sideSquare.x += SQUARE_SIZE;
+    sideSquare.y += SQUARE_SIZE / 2;
 
     //performing capture
     moveTo(toPoint, MagnetState::OFF, MagnetState::ON, false);
+    moveTo(Point(toPoint.x + SQUARE_SIZE / 2, toPoint.y + SQUARE_SIZE / 2), MagnetState::UNCHANGED, MagnetState::UNCHANGED);
     moveTo(sideSquare, MagnetState::UNCHANGED, MagnetState::OFF, false);
 
     movePiece(from, to, isKnight);
@@ -302,10 +306,30 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
 void MotorsController::onMoveRequest(Position from, Position to) {
     if (from.file < 'a' || from.file > 'h' || from.rank < 1 || from.rank > 8 ||
         to.file < 'a' || to.file > 'h' || from.rank < 1 || from.rank > 8) {
-        MessageController::getInstance()->reply(MessageType::MOVE, "invalid params");
+        MessageController::getInstance()->reply(ReplyingType::MOVE_FAILED);
     }
+
+    bool isKnight = false;
+
+    if (abs(from.file - to.file) == 2 && abs(from.rank - to.rank) == 1 ||
+        abs(from.file - to.file) == 1 && abs(from.rank - to.rank) == 2) {
+        isKnight = true;
+    }
+
+    const &Bitboard currentSwitches = SwitchesController::getInstance()->getCurrentState();
+    int squareIndex = (to.rank - 1) * 8 + (to.file - 96);
+    if (currentSwitches.getBitByIndex(squareIndex)) {
+        capturePiece(from, to, isKnight);
+    } else {
+        movePiece(from, to, isKnight);
+    }
+
+    SwitchesController::getInstance()->scan();
+
+    MessageController::getInstance()->reply(ReplyingType::MOVE_DONE, currentSwitches.toString());
 }
 
 void MotorsController::onResetRequest() {
     moveToOrigin();
+    MessageController::getInstance()->reply(ReplyingType::RESET_DONE);
 }
