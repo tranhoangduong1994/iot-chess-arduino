@@ -2,6 +2,8 @@
 
 #include <Arduino.h> 
 
+#include <Bitboard.h>
+#include <SwitchesController.h>
 #include <MessageController.h>
 
 #define MAGNET 8
@@ -250,7 +252,7 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     Point toPoint = getPointByPosition(to);
     
     if (!isKnight) {
-        moveTo(fromPoint, MagnetState::OFF, MagnetState::ON, false);
+        moveTo(fromPoint, MagnetState::OFF, MagnetState::ON);
         moveTo(toPoint, MagnetState::UNCHANGED, MagnetState::OFF, true);
         return;
     }
@@ -281,10 +283,10 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     Point middlePoint2(toPoint.x - (SQUARE_SIZE / 2) * pow(-1, moveLeft), toPoint.y - (SQUARE_SIZE / 2) * pow(-1, moveDown));
     Point toPointAdjusted(toPoint.x + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveLeft), toPoint.y + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveDown));
 
-    moveTo(fromPoint, MagnetState::OFF, MagnetState::ON, false);
-    moveTo(middlePoint1, MagnetState::UNCHANGED, MagnetState::UNCHANGED, false);
-    moveTo(middlePoint2, MagnetState::UNCHANGED, MagnetState::UNCHANGED, false);
-    moveTo(toPointAdjusted, MagnetState::UNCHANGED, MagnetState::OFF, false);
+    moveTo(fromPoint, MagnetState::OFF, MagnetState::ON);
+    moveTo(middlePoint1, MagnetState::UNCHANGED, MagnetState::UNCHANGED);
+    moveTo(middlePoint2, MagnetState::UNCHANGED, MagnetState::UNCHANGED);
+    moveTo(toPointAdjusted, MagnetState::UNCHANGED, MagnetState::OFF);
 }
 
 void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
@@ -296,9 +298,9 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
     sideSquare.y += SQUARE_SIZE / 2;
 
     //performing capture
-    moveTo(toPoint, MagnetState::OFF, MagnetState::ON, false);
+    moveTo(toPoint, MagnetState::OFF, MagnetState::ON);
     moveTo(Point(toPoint.x + SQUARE_SIZE / 2, toPoint.y + SQUARE_SIZE / 2), MagnetState::UNCHANGED, MagnetState::UNCHANGED);
-    moveTo(sideSquare, MagnetState::UNCHANGED, MagnetState::OFF, false);
+    moveTo(sideSquare, MagnetState::UNCHANGED, MagnetState::OFF);
 
     movePiece(from, to, isKnight);
 }
@@ -316,7 +318,7 @@ void MotorsController::onMoveRequest(Position from, Position to) {
         isKnight = true;
     }
 
-    const &Bitboard currentSwitches = SwitchesController::getInstance()->getCurrentState();
+    const Bitboard& currentSwitches = SwitchesController::getInstance()->getCurrentState();
     int squareIndex = (to.rank - 1) * 8 + (to.file - 96);
     if (currentSwitches.getBitByIndex(squareIndex)) {
         capturePiece(from, to, isKnight);

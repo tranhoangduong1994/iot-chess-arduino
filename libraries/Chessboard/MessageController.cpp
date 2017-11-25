@@ -45,16 +45,6 @@ void MessageController::translateMessage() {
 		}
 	}	
 
-	if (commandBuffer[0] == MessageType::CAPTURE) {
-		char fromFile = commandBuffer[1];
-		int fromRank = commandBuffer[2] - 48;
-		char toFile = commandBuffer[3];
-		int toRank = commandBuffer[4] - 48;
-		if (motorsDelegate) {
-			motorsDelegate->onMoveRequest(Position(fromFile, fromRank), Position(toFile, toRank));
-		}
-	}
-
 	if (commandBuffer[0] == MessageType::SCAN_BOARD) {
 		if (switchesDelegate) {
 			switchesDelegate->onScanRequest();
@@ -65,10 +55,6 @@ void MessageController::translateMessage() {
 		if (motorsDelegate) {
 			motorsDelegate->onResetRequest();
 		}
-
-		if(displayerDelegate) {
-			displayerDelegate->onResetRequest();
-		} 
 	}
 }
 

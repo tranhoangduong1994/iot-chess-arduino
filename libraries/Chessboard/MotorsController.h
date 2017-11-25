@@ -3,6 +3,8 @@
 
 #include <assert.h>
 
+#include <MessageController.h>
+
 #include <DataTypes.h>
 
 class MotorsController : public MotorsControllerMessageProtocol {
@@ -25,7 +27,7 @@ private:
     static void onYInterruptTriggered();
 
     void init();
-    void moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting);
+    void moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting = false);
 
     Point getPointByPosition(Position pos);
 

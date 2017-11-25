@@ -2,11 +2,12 @@
 #define __SwitchesController__
 
 #include <Bitboard.h>
+#include <MessageControllerProtocols.h>
 
 class SwitchesController : public SwitchesControllerMessageProtocol {
 public:
 	void scan();
-	const &Bitboard getCurrentState();
+	const Bitboard& getCurrentState();
 
 	void onScanRequest() override;
 	

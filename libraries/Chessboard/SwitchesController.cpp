@@ -18,7 +18,7 @@ SwitchesController* SwitchesController::getInstance() {
 	return instance;
 }
 
-Bitboard SwitchesController::scan() {
+void SwitchesController::scan() {
 	bool changed = false;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -30,7 +30,6 @@ Bitboard SwitchesController::scan() {
 
 		for (int j = 0; j < 8; j++) {
 			if (digitalRead(arrCol[j]) == LOW) {
-				checkedSwitch = true;
 				delay(10);
 				if (digitalRead(arrCol[j]) == LOW) {//double check
 					bitboard.set(i * 8 + j, 1);
@@ -45,11 +44,11 @@ Bitboard SwitchesController::scan() {
 	}
 
 	if (changed) {
-		MessageController::getInstance()->send(ReplyingType::BOARD_CHANGED, bitboard.toString());	
+		MessageController::getInstance()->send(SendingType::BOARD_CHANGED, bitboard.toString());	
 	}
 }
 
-const &Bitboard SwitchesController::getCurrentState() {
+const Bitboard& SwitchesController::getCurrentState() {
 	return bitboard;
 }
 

@@ -6,6 +6,8 @@
 
 #include <DataTypes.h>
 
+#include <MessageControllerProtocols.h>
+
 enum MessageType {
 	NONE,
 	CLEAR_SCREEN,
@@ -30,25 +32,7 @@ enum SendingType {
 	DOWN_PRESSED,
 	MENU_PRESSED,
 	OK_PRESSED
-}
-
-class MotorsControllerMessageProtocol {
-public:
-	virtual void onMoveRequest(Position from, Position to) = 0;
-	virtual void onResetRequest() = 0;
 };
-
-class SwitchesControllerMessageProtocol {
-public:
-	virtual void onScanRequest() = 0;
-};
-
-class DisplayControllerMessageProtocol {
-public:	
-	virtual void onPrintRequest(int line, String content) = 0;
-	virtual void onClearScreenRequest() = 0;
-};
-
 
 class MessageController {
 public:

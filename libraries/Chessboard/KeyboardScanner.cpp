@@ -2,6 +2,8 @@
 
 #include <Arduino.h>
 
+#include <MessageController.h>
+
 KeyboardScanner* KeyboardScanner::instance = NULL;
 
 #define MENU 2

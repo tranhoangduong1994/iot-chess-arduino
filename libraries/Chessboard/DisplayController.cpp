@@ -30,7 +30,7 @@ void DisplayController::clear() {
 	lcd.clear();
 }
 
-void DisplayController::print(int line, const char* content) {
+void DisplayController::print(int line, String content) {
 	lcd.setCursor(0, line);
 	lcd.print(clearingString);
 	lcd.setCursor(0, line);
@@ -38,7 +38,7 @@ void DisplayController::print(int line, const char* content) {
 }
 
 void DisplayController::onPrintRequest(int line, String content) {
-	lcd.print(line, content);
+	print(line, content);
 	MessageController::getInstance()->reply(ReplyingType::PRINT_DONE);
 }
 
