@@ -28,8 +28,8 @@ const int SQUARE_SIZE = 40;
 const int MOVING_ADJUSTMENT_DISTANCE = 5;
 
 MotorsController* MotorsController::instance = NULL;
-bool MotorsController::isXMotorEnabled = false;
-bool MotorsController::isYMotorEnabled = false;
+bool MotorsController::isXMotorDisabled = false;
+bool MotorsController::isYMotorDisabled = false;
 
 MotorsController* MotorsController::getInstance() {
     if (!instance) {
@@ -41,25 +41,25 @@ MotorsController* MotorsController::getInstance() {
 
 void MotorsController::onXInterruptTriggered() {
     digitalWrite(ENABLE_X, HIGH);
-    isXMotorEnabled = true;
+    isXMotorDisabled = true;
 
     delay(400);
 
     if (digitalRead(STOP_X) == HIGH) {
         digitalWrite(ENABLE_X, LOW);
-        isXMotorEnabled = false;
+        isXMotorDisabled = false;
     }
 }
 
 void MotorsController::onYInterruptTriggered() {
     digitalWrite(ENABLE_Y, HIGH);
-    isYMotorEnabled = true;
+    isYMotorDisabled = true;
 
     delay(400);
 
     if (digitalRead(STOP_Y) == HIGH) {
         digitalWrite(ENABLE_Y, LOW);
-        isYMotorEnabled = false;
+        isYMotorDisabled = false;
     }
 }
 
@@ -146,18 +146,18 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
     while (distanceX || distanceY) {
         if (!distanceX) {
             digitalWrite(ENABLE_X, HIGH);
-            isXMotorEnabled = true;
+            isXMotorDisabled = true;
         } else {
             digitalWrite(ENABLE_X, LOW);
-            isXMotorEnabled = false;
+            isXMotorDisabled = false;
         }
 
         if (!distanceY) {
             digitalWrite(ENABLE_Y, HIGH);
-            isYMotorEnabled = true;
+            isYMotorDisabled = true;
         } else {
             digitalWrite(ENABLE_Y, LOW);
-            isYMotorEnabled = false;
+            isYMotorDisabled = false;
         }
 
         for (int i = 0; i < 200; i++) {
@@ -210,24 +210,24 @@ Point MotorsController::getPointByPosition(Position pos) {
 void MotorsController::moveToOrigin() {
     if (digitalRead(STOP_X) == HIGH) {
         digitalWrite(ENABLE_X, LOW);
-        isXMotorEnabled = false;
+        isXMotorDisabled = false;
     } else {
         digitalWrite(ENABLE_X, HIGH);
-        isXMotorEnabled = true;
+        isXMotorDisabled = true;
     }
 
     if (digitalRead(STOP_Y) == HIGH) {
         digitalWrite(ENABLE_Y, LOW);
-        isYMotorEnabled = false;
+        isYMotorDisabled = false;
     } else {
         digitalWrite(ENABLE_Y, HIGH);
-        isYMotorEnabled = true;
+        isYMotorDisabled = true;
     } 
 
     digitalWrite(DIR_X, HIGH);
     digitalWrite(DIR_Y, HIGH);
 
-    while(!isXMotorEnabled || !isYMotorEnabled) {
+    while(!isXMotorDisabled || !isYMotorDisabled) {
         digitalWrite(STEP_X, HIGH);
         digitalWrite(STEP_Y, HIGH);
 
@@ -238,7 +238,7 @@ void MotorsController::moveToOrigin() {
 
         delayMicroseconds(QUICK_DELAY);
 
-        if (isXMotorEnabled && isYMotorEnabled) {
+        if (isXMotorDisabled && isYMotorDisabled) {
             break;
         }
     }

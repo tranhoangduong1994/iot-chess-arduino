@@ -20,8 +20,8 @@ public:
 
 private:
     Point currentPoint;
-    static bool isXMotorEnabled;   
-    static bool isYMotorEnabled;
+    static bool isXMotorDisabled;   
+    static bool isYMotorDisabled;
 
     static void onXInterruptTriggered();
     static void onYInterruptTriggered();
