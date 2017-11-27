@@ -39,10 +39,10 @@ void DisplayController::print(int line, String content) {
 
 void DisplayController::onPrintRequest(int line, String content) {
 	print(line, content);
-	MessageController::getInstance()->reply(ReplyingType::PRINT_DONE);
+	MessageController::getInstance()->reply(ServiceResponseType::PRINT_DONE);
 }
 
 void DisplayController::onClearScreenRequest() {
 	lcd.clear();
-	MessageController::getInstance()->reply(ReplyingType::CLEAR_SCREEN_DONE);
+	MessageController::getInstance()->reply(ServiceResponseType::CLEAR_SCREEN_DONE);
 }

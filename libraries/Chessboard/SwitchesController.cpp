@@ -44,7 +44,7 @@ void SwitchesController::scan() {
 	}
 
 	if (changed) {
-		MessageController::getInstance()->send(SendingType::BOARD_CHANGED, bitboard.toString());	
+		MessageController::getInstance()->send(EventType::BOARD_CHANGED, bitboard.toString());	
 	}
 }
 
@@ -53,7 +53,7 @@ const Bitboard& SwitchesController::getCurrentState() {
 }
 
 void SwitchesController::onScanRequest() {
-	MessageController::getInstance()->reply(ReplyingType::SCAN_DONE, bitboard.toString());
+	MessageController::getInstance()->reply(ServiceResponseType::SCAN_DONE, bitboard.toString());
 }
 
 void SwitchesController::init() {

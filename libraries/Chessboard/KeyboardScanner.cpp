@@ -6,10 +6,10 @@
 
 KeyboardScanner* KeyboardScanner::instance = NULL;
 
-#define MENU 2
-#define UP 14
-#define DOWN 15
-#define OK 3
+#define MENU_PIN 2
+#define UP_PIN 14
+#define DOWN_PIN 15
+#define OK_PIN 3
 
 KeyboardScanner* KeyboardScanner::getInstance() {
 	if (!instance) {
@@ -23,39 +23,39 @@ KeyboardScanner* KeyboardScanner::getInstance() {
 void KeyboardScanner::scan() {
 	int value = 0;
 
-	if (digitalRead(DOWN) == LOW && !downPressed) {
+	if (digitalRead(DOWN_PIN) == LOW && !downPressed) {
 		downPressed = true;
-		MessageController::getInstance()->send(SendingType::DOWN_PRESSED);
+		MessageController::getInstance()->send(EventType::DOWN_PRESSED);
 	}
 
-	if (digitalRead(DOWN) == HIGH && downPressed) {
+	if (digitalRead(DOWN_PIN) == HIGH && downPressed) {
 		downPressed = false;
 	}
 
-	if (digitalRead(UP) == LOW && !upPressed) {
+	if (digitalRead(UP_PIN) == LOW && !upPressed) {
 		upPressed = true;
-		MessageController::getInstance()->send(SendingType::UP_PRESSED);
+		MessageController::getInstance()->send(EventType::UP_PRESSED);
 	}
 
-	if (digitalRead(UP) == HIGH && upPressed) {
+	if (digitalRead(UP_PIN) == HIGH && upPressed) {
 		upPressed = false;
 	}
 
-	if (digitalRead(MENU) == LOW && !menuPressed) {
+	if (digitalRead(MENU_PIN) == LOW && !menuPressed) {
 		menuPressed = true;
-		MessageController::getInstance()->send(SendingType::MENU_PRESSED);
+		MessageController::getInstance()->send(EventType::MENU_PRESSED);
 	}
 
-	if (digitalRead(MENU) == HIGH && menuPressed) {
+	if (digitalRead(MENU_PIN) == HIGH && menuPressed) {
 		menuPressed = false;
 	}
 
-	if (digitalRead(OK) == LOW && !okPressed) {
+	if (digitalRead(OK_PIN) == LOW && !okPressed) {
 		okPressed = true;
-		MessageController::getInstance()->send(SendingType::OK_PRESSED);
+		MessageController::getInstance()->send(EventType::OK_PRESSED);
 	}
 
-	if (digitalRead(OK) == HIGH && okPressed) {
+	if (digitalRead(OK_PIN) == HIGH && okPressed) {
 		okPressed = false;
 	}
 }

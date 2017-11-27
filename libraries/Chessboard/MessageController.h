@@ -9,7 +9,12 @@
 #include <MessageControllerProtocols.h>
 
 enum MessageType {
-	NONE,
+    ServiceRequest,
+    ServiceResponse,
+    Event
+};
+
+enum ServiceRequestType {
 	CLEAR_SCREEN,
 	PRINT,
 	MOVE,
@@ -17,7 +22,7 @@ enum MessageType {
 	RESET_BOARD
 };
 
-enum ReplyingType {
+enum ServiceResponseType {
 	CLEAR_SCREEN_DONE,
 	PRINT_DONE,
 	MOVE_FAILED,
@@ -26,7 +31,7 @@ enum ReplyingType {
 	RESET_DONE
 };
 
-enum SendingType {
+enum EventType {
 	BOARD_CHANGED,
 	UP_PRESSED,
 	DOWN_PRESSED,
@@ -37,8 +42,8 @@ enum SendingType {
 class MessageController {
 public:
 	void checkMessage();
-	void reply(ReplyingType type, String content = "");
-	void send(SendingType type, String content = "");
+	void reply(ServiceResponseType type, String content = "");
+	void send(EventType type, String content = "");
 
 	void setMotorsControllerMessageDelegate(MotorsControllerMessageProtocol* delegate);
 	void setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate);

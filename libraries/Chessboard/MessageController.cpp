@@ -21,13 +21,13 @@ void MessageController::init() {
 }
 
 void MessageController::translateMessage() {
-	if (commandBuffer[0] == MessageType::CLEAR_SCREEN) {
+	if (commandBuffer[0] == ServiceRequestType::CLEAR_SCREEN) {
 		if (displayerDelegate) {
 			displayerDelegate->onClearScreenRequest();
 		}
 	}
 
-	if (commandBuffer[0] == MessageType::PRINT) {
+	if (commandBuffer[0] == ServiceRequestType::PRINT) {
 		int line = commandBuffer[1] - 48;
 		String content = commandBuffer.substring(2);
 		if (displayerDelegate) {
@@ -35,7 +35,7 @@ void MessageController::translateMessage() {
 		}
 	}
 
-	if (commandBuffer[0] == MessageType::MOVE) {
+	if (commandBuffer[0] == ServiceRequestType::MOVE) {
 		char fromFile = commandBuffer[1];
 		int fromRank = commandBuffer[2] - 48;
 		char toFile = commandBuffer[3];
@@ -45,13 +45,13 @@ void MessageController::translateMessage() {
 		}
 	}	
 
-	if (commandBuffer[0] == MessageType::SCAN_BOARD) {
+	if (commandBuffer[0] == ServiceRequestType::SCAN_BOARD) {
 		if (switchesDelegate) {
 			switchesDelegate->onScanRequest();
 		}
 	}
 
-	if (commandBuffer[0] == MessageType::RESET_BOARD) {
+	if (commandBuffer[0] == ServiceRequestType::RESET_BOARD) {
 		if (motorsDelegate) {
 			motorsDelegate->onResetRequest();
 		}
@@ -73,15 +73,15 @@ void MessageController::checkMessage() {
 	}
 }
 
-void MessageController::reply(ReplyingType type, String content) {
+void MessageController::reply(ServiceResponseType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(type) + content);
+	Serial.print(String(MessageType::ServiceResponse) + String(type) + content);
 	Serial.flush();
 }
 
-void MessageController::send(SendingType type, String content) {
+void MessageController::send(EventType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(type) + content);
+	Serial.print(String(MessageType::Event) + String(type) + content);
 	Serial.flush();
 }
 

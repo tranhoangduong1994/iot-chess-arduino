@@ -308,7 +308,7 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
 void MotorsController::onMoveRequest(Position from, Position to) {
     if (from.file < 'a' || from.file > 'h' || from.rank < 1 || from.rank > 8 ||
         to.file < 'a' || to.file > 'h' || from.rank < 1 || from.rank > 8) {
-        MessageController::getInstance()->reply(ReplyingType::MOVE_FAILED);
+        MessageController::getInstance()->reply(ServiceResponseType::MOVE_FAILED);
     }
 
     bool isKnight = false;
@@ -328,10 +328,10 @@ void MotorsController::onMoveRequest(Position from, Position to) {
 
     SwitchesController::getInstance()->scan();
 
-    MessageController::getInstance()->reply(ReplyingType::MOVE_DONE, currentSwitches.toString());
+    MessageController::getInstance()->reply(ServiceResponseType::MOVE_DONE, currentSwitches.toString());
 }
 
 void MotorsController::onResetRequest() {
     moveToOrigin();
-    MessageController::getInstance()->reply(ReplyingType::RESET_DONE);
+    MessageController::getInstance()->reply(ServiceResponseType::RESET_DONE);
 }
