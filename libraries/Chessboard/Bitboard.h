@@ -40,11 +40,19 @@ struct Bitboard {
 	    return string;
 	}
 
-	Bitboard compare(const Bitboard& other) {
+	Bitboard getChangedBoard(const Bitboard& other) {
 		Bitboard result;
 		result.first32 = this->first32 ^ other.first32;
 		result.last32 = this->last32 ^ other.last32;
 		return result;
+	}
+
+	bool operator== (const Bitboard& other) {
+		return this->first32 == other.first32 && this->last32 == other.last32;
+	}
+
+	bool operator!= (const Bitboard& other) {
+		return this->first32 != other.first32 || this->last32 != other.last32;
 	}
 
 	bool getBitByIndex(int index) {

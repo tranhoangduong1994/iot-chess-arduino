@@ -13,6 +13,7 @@ public:
 class SwitchesControllerMessageProtocol {
 public:
 	virtual void onScanRequest() = 0;
+	virtual void onResetRequest() = 0;
 };
 
 class DisplayControllerMessageProtocol {

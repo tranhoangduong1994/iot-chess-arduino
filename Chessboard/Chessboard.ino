@@ -10,6 +10,8 @@ SwitchesController* switchesController;
 KeyboardScanner* keyboardScanner;
 MessageController* messageController;
 
+bool system_ready = false;
+
 void setup () {
     Serial.begin(9600);
 
@@ -21,14 +23,22 @@ void setup () {
 
     switchesController = SwitchesController::getInstance();
 
-    motorsController = MotorsController::getInstance();
+//    motorsController = MotorsController::getInstance();
 
     messageController = MessageController::getInstance();
 }
 
 void loop() {
-    keyboardScanner->scan();
+    if (Serial) {
+        if (!system_ready) {
+            system_ready = true;
+            delay(100);
+            MessageController::getInstance()->send(EventType::SYSTEM_READY);
+        }
+    }
+    
     switchesController->scan();
+    keyboardScanner->scan();
     messageController->checkMessage();
 }
 

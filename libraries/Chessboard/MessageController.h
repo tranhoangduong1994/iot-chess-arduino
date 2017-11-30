@@ -32,6 +32,7 @@ enum ServiceResponseType {
 };
 
 enum EventType {
+	SYSTEM_READY,
 	BOARD_CHANGED,
 	UP_PRESSED,
 	DOWN_PRESSED,

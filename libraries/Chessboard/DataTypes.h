@@ -1,6 +1,8 @@
 #ifndef __DataTypes__
 #define __DataTypes__
 
+#include <Arduino.h>
+
 enum MagnetState {
     UNCHANGED,
     OFF,
@@ -24,6 +26,9 @@ struct Position {
     Position(int file, int rank) {
           this->file = file;
           this->rank = rank;
+    }
+    String toString() {
+        return String((char)file) + String(rank);
     }
 };
 

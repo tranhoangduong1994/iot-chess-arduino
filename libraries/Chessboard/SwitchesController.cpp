@@ -19,7 +19,8 @@ SwitchesController* SwitchesController::getInstance() {
 }
 
 void SwitchesController::scan() {
-	bool changed = false;
+	Bitboard oldBitboard = bitboard;
+	bitboard = Bitboard();
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			digitalWrite(arrRow[j], HIGH);
@@ -33,7 +34,6 @@ void SwitchesController::scan() {
 				delay(10);
 				if (digitalRead(arrCol[j]) == LOW) {//double check
 					bitboard.set(i * 8 + j, 1);
-					changed = true;
 				}
 				delay(10);
 			}
@@ -43,12 +43,20 @@ void SwitchesController::scan() {
 		delay(10);
 	}
 
-	if (changed) {
-		MessageController::getInstance()->send(EventType::BOARD_CHANGED, bitboard.toString());	
+	if (oldBitboard != bitboard) {
+		changed = true;
+		lastChangedTime = millis();
+	} else {
+		if (changed && millis() - lastChangedTime > 1000) {
+			changed = false;
+			if (oldBitboard != bitboard) {
+				MessageController::getInstance()->send(EventType::BOARD_CHANGED, bitboard.toString());
+			}
+		}
 	}
 }
 
-const Bitboard& SwitchesController::getCurrentState() {
+Bitboard SwitchesController::getCurrentState() {
 	return bitboard;
 }
 
@@ -56,9 +64,15 @@ void SwitchesController::onScanRequest() {
 	MessageController::getInstance()->reply(ServiceResponseType::SCAN_DONE, bitboard.toString());
 }
 
+void SwitchesController::onResetRequest() {
+	bitboard = Bitboard();
+}
+
 void SwitchesController::init() {
 	for (int i = 0; i < 8; i++) {
 		pinMode(arrRow[i], OUTPUT);
 		pinMode(arrCol[i], INPUT_PULLUP);
 	}
+
+	changed = false;
 }

@@ -318,20 +318,20 @@ void MotorsController::onMoveRequest(Position from, Position to) {
         isKnight = true;
     }
 
-    const Bitboard& currentSwitches = SwitchesController::getInstance()->getCurrentState();
+    Bitboard currentBitboard = SwitchesController::getInstance()->getCurrentState();
     int squareIndex = (to.rank - 1) * 8 + (to.file - 96);
-    if (currentSwitches.getBitByIndex(squareIndex)) {
+    if (currentBitboard.getBitByIndex(squareIndex)) {
         capturePiece(from, to, isKnight);
     } else {
         movePiece(from, to, isKnight);
     }
 
     SwitchesController::getInstance()->scan();
-
-    MessageController::getInstance()->reply(ServiceResponseType::MOVE_DONE, currentSwitches.toString());
+    MessageController::getInstance()->reply(ServiceResponseType::MOVE_DONE, from.toString() + to.toString());
 }
 
 void MotorsController::onResetRequest() {
     moveToOrigin();
+    SwitchesController::getInstance()->scan();
     MessageController::getInstance()->reply(ServiceResponseType::RESET_DONE);
 }

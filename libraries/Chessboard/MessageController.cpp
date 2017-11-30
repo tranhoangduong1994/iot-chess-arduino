@@ -55,12 +55,18 @@ void MessageController::translateMessage() {
 		if (motorsDelegate) {
 			motorsDelegate->onResetRequest();
 		}
+
+		if (switchesDelegate) {
+			switchesDelegate->onResetRequest();
+		}
 	}
 }
 
 void MessageController::checkMessage() {
 	if (Serial.available()) {
 		while(Serial.available() > 0) {
+			delay(100);
+
 			char character = (char)(Serial.read());
 			if (character == MESSAGE_ENDING_CHAR) {
 				translateMessage();
@@ -75,13 +81,13 @@ void MessageController::checkMessage() {
 
 void MessageController::reply(ServiceResponseType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(MessageType::ServiceResponse) + String(type) + content);
+	Serial.println(String(MessageType::ServiceResponse) + String(type) + content);
 	Serial.flush();
 }
 
 void MessageController::send(EventType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(MessageType::Event) + String(type) + content);
+	Serial.println(String(MessageType::Event) + String(type) + content);
 	Serial.flush();
 }
 
