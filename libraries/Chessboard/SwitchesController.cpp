@@ -50,7 +50,7 @@ void SwitchesController::scan() {
 		if (changed && millis() - lastChangedTime > 1000) {
 			changed = false;
 			if (oldBitboard != bitboard) {
-				MessageController::getInstance()->send(EventType::BOARD_CHANGED, bitboard.toString());
+				MessageController::getInstance()->send(BOARD_CHANGED, bitboard.toString());
 			}
 		}
 	}
@@ -61,7 +61,7 @@ Bitboard SwitchesController::getCurrentState() {
 }
 
 void SwitchesController::onScanRequest() {
-	MessageController::getInstance()->reply(ServiceResponseType::SCAN_DONE, bitboard.toString());
+	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());
 }
 
 void SwitchesController::onResetRequest() {

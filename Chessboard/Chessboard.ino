@@ -33,7 +33,7 @@ void loop() {
         if (!system_ready) {
             system_ready = true;
             delay(100);
-            MessageController::getInstance()->send(EventType::SYSTEM_READY);
+            MessageController::getInstance()->send(SYSTEM_READY);
         }
     }
     

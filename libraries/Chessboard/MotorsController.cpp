@@ -86,10 +86,10 @@ void MotorsController::init() {
 }
 
 void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting) {
-    if (beginState == MagnetState::ON) {
+    if (beginState == ON) {
         digitalWrite(MAGNET, HIGH);
         delay(1000);
-    } else if (beginState == MagnetState::OFF) {
+    } else if (beginState == OFF) {
         digitalWrite(MAGNET, LOW);
         delay(1000);
     }
@@ -187,10 +187,10 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
         }        
     }
 
-    if (endState == MagnetState::ON) {
+    if (endState == ON) {
         digitalWrite(MAGNET, HIGH);
         delay(1000);
-    } else if (endState == MagnetState::OFF) {
+    } else if (endState == OFF) {
         digitalWrite(MAGNET, LOW);
         delay(1000);
     }
@@ -252,8 +252,8 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     Point toPoint = getPointByPosition(to);
     
     if (!isKnight) {
-        moveTo(fromPoint, MagnetState::OFF, MagnetState::ON);
-        moveTo(toPoint, MagnetState::UNCHANGED, MagnetState::OFF, true);
+        moveTo(fromPoint, OFF, ON);
+        moveTo(toPoint, UNCHANGED, OFF, true);
         return;
     }
 
@@ -283,10 +283,10 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     Point middlePoint2(toPoint.x - (SQUARE_SIZE / 2) * pow(-1, moveLeft), toPoint.y - (SQUARE_SIZE / 2) * pow(-1, moveDown));
     Point toPointAdjusted(toPoint.x + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveLeft), toPoint.y + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveDown));
 
-    moveTo(fromPoint, MagnetState::OFF, MagnetState::ON);
-    moveTo(middlePoint1, MagnetState::UNCHANGED, MagnetState::UNCHANGED);
-    moveTo(middlePoint2, MagnetState::UNCHANGED, MagnetState::UNCHANGED);
-    moveTo(toPointAdjusted, MagnetState::UNCHANGED, MagnetState::OFF);
+    moveTo(fromPoint, OFF, ON);
+    moveTo(middlePoint1, UNCHANGED, UNCHANGED);
+    moveTo(middlePoint2, UNCHANGED, UNCHANGED);
+    moveTo(toPointAdjusted, UNCHANGED, OFF);
 }
 
 void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
@@ -298,9 +298,9 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
     sideSquare.y += SQUARE_SIZE / 2;
 
     //performing capture
-    moveTo(toPoint, MagnetState::OFF, MagnetState::ON);
-    moveTo(Point(toPoint.x + SQUARE_SIZE / 2, toPoint.y + SQUARE_SIZE / 2), MagnetState::UNCHANGED, MagnetState::UNCHANGED);
-    moveTo(sideSquare, MagnetState::UNCHANGED, MagnetState::OFF);
+    moveTo(toPoint, OFF, ON);
+    moveTo(Point(toPoint.x + SQUARE_SIZE / 2, toPoint.y + SQUARE_SIZE / 2), UNCHANGED, UNCHANGED);
+    moveTo(sideSquare, UNCHANGED, OFF);
 
     movePiece(from, to, isKnight);
 }
@@ -308,7 +308,7 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
 void MotorsController::onMoveRequest(Position from, Position to) {
     if (from.file < 'a' || from.file > 'h' || from.rank < 1 || from.rank > 8 ||
         to.file < 'a' || to.file > 'h' || from.rank < 1 || from.rank > 8) {
-        MessageController::getInstance()->reply(ServiceResponseType::MOVE_FAILED);
+        MessageController::getInstance()->reply(MOVE_FAILED);
     }
 
     bool isKnight = false;
@@ -327,11 +327,11 @@ void MotorsController::onMoveRequest(Position from, Position to) {
     }
 
     SwitchesController::getInstance()->scan();
-    MessageController::getInstance()->reply(ServiceResponseType::MOVE_DONE, from.toString() + to.toString());
+    MessageController::getInstance()->reply(MOVE_DONE, from.toString() + to.toString());
 }
 
 void MotorsController::onResetRequest() {
     moveToOrigin();
     SwitchesController::getInstance()->scan();
-    MessageController::getInstance()->reply(ServiceResponseType::RESET_DONE);
+    MessageController::getInstance()->reply(RESET_DONE);
 }
