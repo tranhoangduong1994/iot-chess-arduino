@@ -75,4 +75,6 @@ void SwitchesController::init() {
 	}
 
 	changed = false;
+
+	MessageController::getInstance()->setSwitchesControllerMessageDelegate(this);
 }

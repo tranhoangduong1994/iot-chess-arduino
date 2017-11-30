@@ -80,6 +80,8 @@ void MotorsController::init() {
     attachInterrupt(5, MotorsController::onXInterruptTriggered, FALLING);
     attachInterrupt(4, MotorsController::onYInterruptTriggered, FALLING);
 
+    MessageController::getInstance()->setMotorsControllerMessageDelegate(this);
+
     delay(200);
 
     moveToOrigin();

@@ -24,6 +24,8 @@ DisplayController* DisplayController::getInstance() {
 
 void DisplayController::init() {
 	lcd.begin(20,4);
+
+	MessageController::getInstance()->setDisplayControllerMessageDelegate(this);
 }
 
 void DisplayController::clear() {
