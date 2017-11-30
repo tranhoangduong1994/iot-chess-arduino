@@ -6,7 +6,7 @@
 #include <SwitchesController.h>
 #include <MessageController.h>
 
-#define MAGNET 8
+#define MAGNET 12
 
 #define DIR_X A1
 #define STEP_X A0
