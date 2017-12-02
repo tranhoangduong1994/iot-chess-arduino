@@ -29,6 +29,7 @@ void MessageController::translateMessage() {
 
 	if (commandBuffer[0] - 48 == PRINT) {
 		int line = commandBuffer[1] - 48;
+		Serial.print(String(line) + ",");
 		String content = commandBuffer.substring(2);
 		if (displayerDelegate) {
 			displayerDelegate->onPrintRequest(line, content);
@@ -64,9 +65,8 @@ void MessageController::translateMessage() {
 
 void MessageController::checkMessage() {
 	if (Serial.available()) {
+		delay(100);
 		while(Serial.available() > 0) {
-			delay(100);
-
 			char character = (char)(Serial.read());
 			if (character == MESSAGE_ENDING_CHAR) {
 				translateMessage();
