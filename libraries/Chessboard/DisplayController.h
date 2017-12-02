@@ -4,6 +4,8 @@
 #include <MessageControllerProtocols.h>
 #include <Arduino.h>
 
+class LiquidCrystal_I2C;
+
 class DisplayController : public DisplayControllerMessageProtocol {
 public:
 	void clear();
@@ -15,6 +17,7 @@ public:
 	static DisplayController* getInstance();
 
 private:
+	LiquidCrystal_I2C* lcd;
 	void init();
 
 	DisplayController() {}
