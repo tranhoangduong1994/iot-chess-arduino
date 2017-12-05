@@ -62,7 +62,7 @@ Bitboard SwitchesController::getCurrentState() {
 }
 
 void SwitchesController::onScanRequest() {
-	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());
+	scan();
 }
 
 void SwitchesController::onResetRequest() {
