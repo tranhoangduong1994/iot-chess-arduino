@@ -17,25 +17,10 @@ void MessageController::init() {
 	commandBuffer = "";
 	motorsDelegate = NULL;
 	switchesDelegate = NULL;
-	displayerDelegate = NULL;
+	send(SYSTEM_READY);
 }
 
 void MessageController::translateMessage() {
-	if (commandBuffer[0] - 48 == CLEAR_SCREEN) {
-		if (displayerDelegate) {
-			displayerDelegate->onClearScreenRequest();
-		}
-	}
-
-	if (commandBuffer[0] - 48 == PRINT) {
-		int line = commandBuffer[1] - 48;
-		Serial.print(String(line) + ",");
-		String content = commandBuffer.substring(2);
-		if (displayerDelegate) {
-			displayerDelegate->onPrintRequest(line, content);
-		}
-	}
-
 	if (commandBuffer[0] - 48 == MOVE) {
 		char fromFile = commandBuffer[1];
 		int fromRank = commandBuffer[2] - 48;
@@ -71,23 +56,23 @@ void MessageController::checkMessage() {
 			if (character == MESSAGE_ENDING_CHAR) {
 				translateMessage();
 				commandBuffer = "";
-				return;
+				// return;
+			} else {
+				commandBuffer += character;
 			}
-
-			commandBuffer += character;
 		}
 	}
 }
 
 void MessageController::reply(ServiceResponseType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.println(String(ServiceResponse) + String(type) + content);
+	Serial.print(String(ServiceResponse) + String(type) + content);
 	Serial.flush();
 }
 
 void MessageController::send(EventType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.println(String(Event) + String(type) + content);
+	Serial.print(String(Event) + String(type) + content);
 	Serial.flush();
 }
 
@@ -97,8 +82,4 @@ void MessageController::setMotorsControllerMessageDelegate(MotorsControllerMessa
 
 void MessageController::setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate) {
 	switchesDelegate = delegate;
-}
-
-void MessageController::setDisplayControllerMessageDelegate(DisplayControllerMessageProtocol* delegate) {
-	displayerDelegate = delegate;
 }

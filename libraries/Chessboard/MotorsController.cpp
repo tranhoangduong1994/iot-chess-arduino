@@ -24,7 +24,7 @@ const int NORMAL_DELAY = 50;
 const int X0_OFFSET = 27;
 const int Y0_OFFSET = 0;
 
-const int SQUARE_SIZE = 40;
+const int SQUARE_SIZE = 39.625;
 const int MOVING_ADJUSTMENT_DISTANCE = 5;
 
 MotorsController* MotorsController::instance = NULL;
@@ -81,10 +81,6 @@ void MotorsController::init() {
     attachInterrupt(4, MotorsController::onYInterruptTriggered, FALLING);
 
     MessageController::getInstance()->setMotorsControllerMessageDelegate(this);
-
-    delay(200);
-
-    moveToOrigin();
 }
 
 void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting) {

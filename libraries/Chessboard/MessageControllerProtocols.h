@@ -16,10 +16,4 @@ public:
 	virtual void onResetRequest() = 0;
 };
 
-class DisplayControllerMessageProtocol {
-public:	
-	virtual void onPrintRequest(int line, String content) = 0;
-	virtual void onClearScreenRequest() = 0;
-};
-
 #endif

@@ -19,7 +19,7 @@ SwitchesController* SwitchesController::getInstance() {
 }
 
 void SwitchesController::scan() {
-	Bitboard oldBitboard = bitboard;
+	// Bitboard oldBitboard = bitboard;
 	bitboard = Bitboard();
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -43,17 +43,18 @@ void SwitchesController::scan() {
 		delay(10);
 	}
 
-	if (oldBitboard != bitboard) {
-		changed = true;
-		lastChangedTime = millis();
-	} else {
-		if (changed && millis() - lastChangedTime > 1000) {
-			changed = false;
-			if (oldBitboard != bitboard) {
-				MessageController::getInstance()->send(BOARD_CHANGED, bitboard.toString());
-			}
-		}
-	}
+	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());
+	// if (oldBitboard != bitboard) {
+	// 	changed = true;
+	// 	lastChangedTime = millis();
+	// } else {
+	// 	if (changed && millis() - lastChangedTime > 1000) {
+	// 		changed = false;
+	// 		if (oldBitboard != bitboard) {
+	// 			MessageController::getInstance()->send(BOARD_CHANGED, bitboard.toString());
+	// 		}
+	// 	}
+	// }
 }
 
 Bitboard SwitchesController::getCurrentState() {
