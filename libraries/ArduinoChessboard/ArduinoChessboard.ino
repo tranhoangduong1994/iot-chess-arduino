@@ -11,15 +11,15 @@ bool system_ready = false;
 void setup () {
     Serial.begin(9600);
     
-//    pinMode(10, OUTPUT);
-//
-//    digitalWrite(10, LOW);
-//    delay(150);
-//    digitalWrite(10, HIGH);
-//    delay(50);
-//    digitalWrite(10, LOW);
-//    delay(150);
-//    digitalWrite(10, HIGH);
+    pinMode(10, OUTPUT);
+
+    digitalWrite(10, LOW);
+    delay(150);
+    digitalWrite(10, HIGH);
+    delay(50);
+    digitalWrite(10, LOW);
+    delay(150);
+    digitalWrite(10, HIGH);
 
     switchesController = SwitchesController::getInstance();
     motorsController = MotorsController::getInstance();

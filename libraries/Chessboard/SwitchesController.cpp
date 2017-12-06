@@ -31,16 +31,16 @@ void SwitchesController::scan() {
 
 		for (int j = 0; j < 8; j++) {
 			if (digitalRead(arrCol[j]) == LOW) {
-				delay(10);
+				delay(1);
 				if (digitalRead(arrCol[j]) == LOW) {//double check
 					bitboard.set(i * 8 + j, 1);
 				}
-				delay(10);
+				delay(1);
 			}
 		}
 
 		digitalWrite(arrRow[i], HIGH);
-		delay(10);
+		delay(1);
 	}
 
 	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());

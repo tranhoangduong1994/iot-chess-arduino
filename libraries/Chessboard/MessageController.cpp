@@ -21,6 +21,7 @@ void MessageController::init() {
 }
 
 void MessageController::translateMessage() {
+	Serial.print(String("[Arduino-MessageController] translateMessage: ") + commandBuffer + "|");
 	if (commandBuffer[0] - 48 == MOVE) {
 		char fromFile = commandBuffer[1];
 		int fromRank = commandBuffer[2] - 48;
@@ -54,10 +55,12 @@ void MessageController::checkMessage() {
 		while(Serial.available() > 0) {
 			char character = (char)(Serial.read());
 			if (character == MESSAGE_ENDING_CHAR) {
+				Serial.print("[Arduino-checkMessage] End message|");
 				translateMessage();
 				commandBuffer = "";
 				// return;
 			} else {
+				Serial.print(String("[Arduino-checkMessage] Received character:") + String(character) + "|");
 				commandBuffer += character;
 			}
 		}
