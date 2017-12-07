@@ -56,11 +56,12 @@ struct Bitboard {
 	}
 
 	bool getBitByIndex(int index) {
+		unsigned long one = 1;
 		if (index > 31) {
-			return last32 & (1 << (index - 1));
+			return last32 & (one << (index - 32));
 		}
 
-		return first32 & (1 << (index - 1));
+		return first32 & (one << index);
 	}
 };
 

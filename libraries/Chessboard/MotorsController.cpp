@@ -18,13 +18,13 @@
 #define ENABLE_Y A2 // optional (just delete ENABLE from everywhere if not used)
 #define STOP_Y 19
 
-const int QUICK_DELAY = 25;
+const int QUICK_DELAY = 50;
 const int NORMAL_DELAY = 50;
 
 const int X0_OFFSET = 30;
-const int Y0_OFFSET = 0;
+const int Y0_OFFSET = 6;
 
-const int SQUARE_SIZE = 39.625;
+const float SQUARE_SIZE = 39.625;
 const int MOVING_ADJUSTMENT_DISTANCE = 5;
 
 MotorsController* MotorsController::instance = NULL;
@@ -195,7 +195,7 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
 }
 
 Point MotorsController::getPointByPosition(Position pos) {
-    if (pos.file < 'a' || pos.file > 'h') {
+    if (pos.file < 'a' || pos.file > 'h' || pos.rank < 1 || pos.rank > 8) {
         assert(false);
     }
 
@@ -317,7 +317,7 @@ void MotorsController::onMoveRequest(Position from, Position to) {
     }
 
     Bitboard currentBitboard = SwitchesController::getInstance()->getCurrentState();
-    int squareIndex = (to.rank - 1) * 8 + (to.file - 96);
+    int squareIndex = (to.rank - 1) * 8 + (to.file - 97);
     if (currentBitboard.getBitByIndex(squareIndex)) {
         capturePiece(from, to, isKnight);
     } else {
