@@ -21,7 +21,7 @@
 const int QUICK_DELAY = 25;
 const int NORMAL_DELAY = 50;
 
-const int X0_OFFSET = 27;
+const int X0_OFFSET = 30;
 const int Y0_OFFSET = 0;
 
 const int SQUARE_SIZE = 39.625;
@@ -144,18 +144,18 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
     while (distanceX || distanceY) {
         if (!distanceX) {
             digitalWrite(ENABLE_X, HIGH);
-            isXMotorDisabled = true;
+            //isXMotorDisabled = true;
         } else {
             digitalWrite(ENABLE_X, LOW);
-            isXMotorDisabled = false;
+            //isXMotorDisabled = false;
         }
 
         if (!distanceY) {
             digitalWrite(ENABLE_Y, HIGH);
-            isYMotorDisabled = true;
+            //isYMotorDisabled = true;
         } else {
             digitalWrite(ENABLE_Y, LOW);
-            isYMotorDisabled = false;
+            //isYMotorDisabled = false;
         }
 
         for (int i = 0; i < 200; i++) {
@@ -325,7 +325,8 @@ void MotorsController::onMoveRequest(Position from, Position to) {
     }
 
     SwitchesController::getInstance()->scan();
-    MessageController::getInstance()->reply(MOVE_DONE, from.toString() + to.toString());
+    Bitboard newBitboard = SwitchesController::getInstance()->getCurrentState();
+    MessageController::getInstance()->reply(MOVE_DONE, from.toString() + to.toString() + newBitboard.toString());
 }
 
 void MotorsController::onResetRequest() {
