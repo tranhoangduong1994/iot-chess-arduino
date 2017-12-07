@@ -42,8 +42,6 @@ void SwitchesController::scan() {
 		digitalWrite(arrRow[i], HIGH);
 		delay(1);
 	}
-
-	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());
 	// if (oldBitboard != bitboard) {
 	// 	changed = true;
 	// 	lastChangedTime = millis();
@@ -63,6 +61,7 @@ Bitboard SwitchesController::getCurrentState() {
 
 void SwitchesController::onScanRequest() {
 	scan();
+	MessageController::getInstance()->reply(SCAN_DONE, bitboard.toString());
 }
 
 void SwitchesController::onResetRequest() {
