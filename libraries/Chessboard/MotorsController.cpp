@@ -21,11 +21,12 @@
 const int QUICK_DELAY = 50;
 const int NORMAL_DELAY = 50;
 
-const int X0_OFFSET = 30;
-const int Y0_OFFSET = 6;
+const int X0_OFFSET = 27;
+const int Y0_OFFSET = 0;
 
 const float SQUARE_SIZE = 39.625;
 const int MOVING_ADJUSTMENT_DISTANCE = 5;
+const int DIAGONAL_MOVING_ADJUSTMENT_DISTANCE = 4;
 
 MotorsController* MotorsController::instance = NULL;
 bool MotorsController::isXMotorDisabled = false;
@@ -79,6 +80,9 @@ void MotorsController::init() {
 
     attachInterrupt(5, MotorsController::onXInterruptTriggered, FALLING);
     attachInterrupt(4, MotorsController::onYInterruptTriggered, FALLING);
+    
+    digitalWrite(ENABLE_X, HIGH);
+    digitalWrite(ENABLE_Y, HIGH);
 
     MessageController::getInstance()->setMotorsControllerMessageDelegate(this);
 }
@@ -98,24 +102,36 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
                 target.x += MOVING_ADJUSTMENT_DISTANCE;
             } else {//moving left
                 target.x -= MOVING_ADJUSTMENT_DISTANCE;
+                if (target.x < 0) {
+					target.x = 0;
+				}
             }
         } else if (target.x == currentPoint.x) {//vertical
             if (target.y > currentPoint.y) {//moving up
                 target.y += MOVING_ADJUSTMENT_DISTANCE;
             } else {//moving down
                 target.y -= MOVING_ADJUSTMENT_DISTANCE;
+                if (target.y < 0) {
+					target.y = 0;
+				}
             }
         } else {//diagonal
             if (target.x > currentPoint.x) {//moving right
-                target.x += MOVING_ADJUSTMENT_DISTANCE;
+                target.x += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
             } else {//moving left
-                target.x -= MOVING_ADJUSTMENT_DISTANCE;
+                target.x -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                if (target.x < 0) {
+					target.x = 0;
+				}
             }
 
             if (target.y > currentPoint.y) {//moving up
-                target.y += MOVING_ADJUSTMENT_DISTANCE;
+                target.y += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
             } else {
-                target.y -= MOVING_ADJUSTMENT_DISTANCE;
+                target.y -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                if (target.y < 0) {
+					target.y = 0;
+				}                
             }
         }
     }
@@ -183,6 +199,14 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
             distanceY--;
             currentPoint.y++;
         }        
+        
+        if (distanceX == 0) {
+			digitalWrite(ENABLE_X, HIGH);
+		}
+		
+		if (distanceY == 0) {
+			digitalWrite(ENABLE_Y, HIGH);
+		}
     }
 
     if (endState == ON) {
@@ -293,11 +317,21 @@ void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
 
     Point sideSquare = getPointByPosition(Position('h', to.rank));
     sideSquare.x += SQUARE_SIZE;
-    sideSquare.y += SQUARE_SIZE / 2;
-
+    
+    Point middlePoint;
+    middlePoint.x = toPoint.x + SQUARE_SIZE / 2;
+    
+    if (to.rank > 4) {
+		sideSquare.y -= SQUARE_SIZE / 2;
+		middlePoint.y = toPoint.y - SQUARE_SIZE / 2; 
+	} else {
+		sideSquare.y += SQUARE_SIZE / 2;
+		middlePoint.y = toPoint.y + SQUARE_SIZE / 2; 
+	}
+	
     //performing capture
     moveTo(toPoint, OFF, ON);
-    moveTo(Point(toPoint.x + SQUARE_SIZE / 2, toPoint.y + SQUARE_SIZE / 2), UNCHANGED, UNCHANGED);
+    moveTo(middlePoint, UNCHANGED, UNCHANGED);
     moveTo(sideSquare, UNCHANGED, OFF);
 
     movePiece(from, to, isKnight);
@@ -329,8 +363,72 @@ void MotorsController::onMoveRequest(Position from, Position to) {
     MessageController::getInstance()->reply(MOVE_DONE, from.toString() + to.toString() + newBitboard.toString());
 }
 
+void MotorsController::onCastlingRequest(CastlingType type) {
+	Position kingFromPos, kingToPos, rookFromPos, rookToPos;
+	Point fromPoint, toPoint, middlePoint1, middlePoint2;
+	switch(type) {
+		case WHITE_QUEEN_SIDE:
+			kingFromPos = Position('e', 1);
+			kingToPos = Position('c', 1);
+			rookFromPos = Position('a', 1);
+			rookToPos = Position('d', 1);
+			fromPoint = getPointByPosition(rookFromPos);
+			toPoint = getPointByPosition(rookToPos);
+			middlePoint1 = Point(fromPoint.x + (SQUARE_SIZE / 2), fromPoint.y + (SQUARE_SIZE / 2));
+			middlePoint2 = Point(toPoint.x - (SQUARE_SIZE / 2), toPoint.y + (SQUARE_SIZE / 2));
+			break;
+			
+		case WHITE_KING_SIDE:
+			kingFromPos = Position('e', 1);
+			kingToPos = Position('g', 1);
+			rookFromPos = Position('h', 1);
+			rookToPos = Position('f', 1);
+			fromPoint = getPointByPosition(rookFromPos);
+			toPoint = getPointByPosition(rookToPos);
+			middlePoint1 = Point(fromPoint.x - (SQUARE_SIZE / 2), fromPoint.y + (SQUARE_SIZE / 2));
+			middlePoint2 = Point(toPoint.x + (SQUARE_SIZE / 2), toPoint.y + (SQUARE_SIZE / 2));
+			break;
+			
+		case BLACK_QUEEN_SIDE:
+			kingFromPos = Position('e', 8);
+			kingToPos = Position('c', 8);
+			rookFromPos = Position('a', 8);
+			rookToPos = Position('d', 8);
+			fromPoint = getPointByPosition(rookFromPos);
+			toPoint = getPointByPosition(rookToPos);
+			middlePoint1 = Point(fromPoint.x + (SQUARE_SIZE / 2), fromPoint.y - (SQUARE_SIZE / 2));
+			middlePoint2 = Point(toPoint.x - (SQUARE_SIZE / 2), toPoint.y - (SQUARE_SIZE / 2));
+			break;
+			
+		case BLACK_KING_SIDE:
+			kingFromPos = Position('e', 8);
+			kingToPos = Position('g', 8);
+			rookFromPos = Position('h', 8);
+			rookToPos = Position('f', 8);
+			fromPoint = getPointByPosition(rookFromPos);
+			toPoint = getPointByPosition(rookToPos);
+			middlePoint1 = Point(fromPoint.x - (SQUARE_SIZE / 2), fromPoint.y - (SQUARE_SIZE / 2));
+			middlePoint2 = Point(toPoint.x + (SQUARE_SIZE / 2), toPoint.y - (SQUARE_SIZE / 2));			
+			break;
+			
+		default:
+			return;
+	}
+	
+	movePiece(kingFromPos, kingToPos);
+	moveTo(fromPoint, OFF, ON);
+    moveTo(middlePoint1, UNCHANGED, UNCHANGED);
+    moveTo(middlePoint2, UNCHANGED, UNCHANGED);
+    moveTo(toPoint, UNCHANGED, OFF);
+    
+    SwitchesController::getInstance()->scan();
+    Bitboard newBitboard = SwitchesController::getInstance()->getCurrentState();
+    MessageController::getInstance()->reply(MOVE_DONE, kingFromPos.toString() + kingToPos.toString() + newBitboard.toString());
+}
+
 void MotorsController::onResetRequest() {
     moveToOrigin();
     SwitchesController::getInstance()->scan();
-    MessageController::getInstance()->reply(RESET_DONE);
+    String bitboard = SwitchesController::getInstance()->getCurrentState().toString();
+    MessageController::getInstance()->reply(RESET_DONE, bitboard);
 }

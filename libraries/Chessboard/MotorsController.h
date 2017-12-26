@@ -14,6 +14,7 @@ public:
     void capturePiece(Position from, Position to, bool isKnight = false);
 
     void onMoveRequest(Position from, Position to) override;
+    void onCastlingRequest(CastlingType type) override;
     void onResetRequest() override;
 
     static MotorsController* getInstance();

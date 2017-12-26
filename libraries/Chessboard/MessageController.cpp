@@ -32,6 +32,13 @@ void MessageController::translateMessage() {
 		}
 	}	
 
+	if (commandBuffer[0] - 48 == CASTLING) {
+		int type = commandBuffer[1] - 48;
+		if (motorsDelegate) {
+			motorsDelegate->onCastlingRequest(CastlingType(type));
+		}
+	}	
+
 	if (commandBuffer[0] - 48 == SCAN_BOARD) {
 		if (switchesDelegate) {
 			switchesDelegate->onScanRequest();
@@ -69,13 +76,13 @@ void MessageController::checkMessage() {
 
 void MessageController::reply(ServiceResponseType type, String content) {
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(ServiceResponse) + String(type) + content);
+	Serial.print(String(MESSAGE_ENDING_CHAR) + String(ServiceResponse) + String(type) + content);
 	Serial.flush();
 }
 
-void MessageController::send(EventType type, String content) {
+void MessageController::send(EventType type, String content) { 
 	content += MESSAGE_ENDING_CHAR;
-	Serial.print(String(Event) + String(type) + content);
+	Serial.print(String(MESSAGE_ENDING_CHAR) + String(Event) + String(type) + content);
 	Serial.flush();
 }
 
