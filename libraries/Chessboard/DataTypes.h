@@ -3,6 +3,13 @@
 
 #include <Arduino.h>
 
+enum CastlingType {
+	WHITE_QUEEN_SIDE,
+	WHITE_KING_SIDE,
+	BLACK_QUEEN_SIDE,
+	BLACK_KING_SIDE
+};
+
 enum MagnetState {
     UNCHANGED,
     OFF,
