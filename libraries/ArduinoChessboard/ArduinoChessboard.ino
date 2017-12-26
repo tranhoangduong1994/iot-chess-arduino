@@ -7,7 +7,7 @@ MessageController* messageController;
 bool system_ready = false;
 
 void setup () {
-    Serial.begin(9600);
+    Serial.begin(115200);
     
 /*    pinMode(10, OUTPUT);
 
