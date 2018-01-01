@@ -19,6 +19,7 @@ SpeakerController* SpeakerController::getInstance() {
 }
 
 void SpeakerController::onSoundRequest(SoundType type) {
+	Serial.println("onSoundRequest: " + String(type));
 	switch(type) {
 		case SOUND_SYSTEM_READY:
 			digitalWrite(10, LOW);
