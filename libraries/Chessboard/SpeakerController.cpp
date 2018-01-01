@@ -34,24 +34,13 @@ void SpeakerController::onSoundRequest(SoundType type) {
     		digitalWrite(10, HIGH);
 			break;
 		case SOUND_VALID_MOVE:
-			digitalWrite(10, LOW);
-    		delay(25);
-    		digitalWrite(10, HIGH);
 			break;
 
 		case SOUND_INVALID_MOVE:
 		case SOUND_OFFPOSITION:
 		case SOUND_MULTIPLEMOVE:
 			digitalWrite(10, LOW);
-    		delay(25);
-    		digitalWrite(10, HIGH);
-    		delay(10);
-    		digitalWrite(10, LOW);
-    		delay(25);
-    		digitalWrite(10, HIGH);
-    		delay(10);
-    		digitalWrite(10, LOW);
-    		delay(25);
+    		delay(50);
     		digitalWrite(10, HIGH);
     		break;
 
