@@ -1,6 +1,7 @@
 #include <MotorsController.h>
 #include <SwitchesController.h>
 #include <MessageController.h>
+#include <SpeakerController.h>
 
 MessageController* messageController;
 
@@ -11,6 +12,8 @@ void setup () {
 
     SwitchesController::getInstance();
     MotorsController::getInstance();
+    SpeakerController::getInstance();
+
     messageController = MessageController::getInstance();
 }
 

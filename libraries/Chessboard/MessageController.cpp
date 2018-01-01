@@ -17,6 +17,7 @@ void MessageController::init() {
 	commandBuffer = "";
 	motorsDelegate = NULL;
 	switchesDelegate = NULL;
+	speakerDelegate = NULL;
 	send(SYSTEM_READY);
 }
 
