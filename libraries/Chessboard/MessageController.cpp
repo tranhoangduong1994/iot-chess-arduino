@@ -57,7 +57,6 @@ void MessageController::translateMessage() {
 	}
 	
 	if (commandBuffer[0] - 48 == PLAY_SOUND) {
-		Serial.println("PLAY_SOUND|");
 		int type = commandBuffer[1] - 48;
 		if (speakerDelegate) {
 			speakerDelegate->onSoundRequest(SoundType(type));

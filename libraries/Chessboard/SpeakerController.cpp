@@ -22,40 +22,9 @@ SpeakerController* SpeakerController::getInstance() {
 }
 
 void SpeakerController::onSoundRequest(SoundType type) {
-	Serial.println("onSoundRequest: " + String(type));
 	switch(type) {
 		case SOUND_SYSTEM_READY:
-			digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-			break;
-
 		case SOUND_GAME_READY:
-			digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
-    		delay(150);
-    		digitalWrite(10, HIGH);
-			break;		
-
 		case SOUND_VALID_MOVE:
 			digitalWrite(10, LOW);
     		delay(150);
@@ -70,10 +39,6 @@ void SpeakerController::onSoundRequest(SoundType type) {
 		case SOUND_OFFPOSITION:
 		case SOUND_MULTIPLEMOVE:
 			digitalWrite(10, LOW);
-    		delay(500);
-    		digitalWrite(10, HIGH);
-    		delay(50);
-    		digitalWrite(10, LOW);
     		delay(500);
     		digitalWrite(10, HIGH);
     		break;
