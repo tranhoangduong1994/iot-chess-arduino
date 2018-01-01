@@ -6,6 +6,7 @@ SpeakerController* SpeakerController::getInstance() {
 	if (!instance) {
 		instance = new SpeakerController();
 		pinMode(10, OUTPUT);
+		digitalWrite(10, HIGH);
 	}
 	/*digitalWrite(10, LOW);
     delay(150);
