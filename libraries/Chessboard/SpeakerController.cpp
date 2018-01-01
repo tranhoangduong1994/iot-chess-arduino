@@ -43,7 +43,15 @@ void SpeakerController::onSoundRequest(SoundType type) {
 		case SOUND_OFFPOSITION:
 		case SOUND_MULTIPLEMOVE:
 			digitalWrite(10, LOW);
-    		delay(200);
+    		delay(25);
+    		digitalWrite(10, HIGH);
+    		delay(10);
+    		digitalWrite(10, LOW);
+    		delay(25);
+    		digitalWrite(10, HIGH);
+    		delay(10);
+    		digitalWrite(10, LOW);
+    		delay(25);
     		digitalWrite(10, HIGH);
     		break;
 
