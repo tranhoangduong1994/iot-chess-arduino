@@ -19,7 +19,7 @@ public:
 	virtual void onResetRequest() = 0;
 };
 
-class SpeakerControllerProtocol {
+class SwitchesControllerMessageProtocol {
 public:
 	virtual void onSoundRequest(SoundType soundType) = 0;
 };
