@@ -55,13 +55,20 @@ void MessageController::translateMessage() {
 		}
 	}
 	
-	if (commandBuffer[0] - 48 == MAGNET_ON) {
-		motorsDelegate->onMagnetOnRequest();
+	if (commandBuffer[0] - 48 == PLAY_SOUND) {
+		int type = commandBuffer[1] - 48;
+		if (speakerDelegate) {
+			speakerDelegate->onSoundRequest(SoundType(type));
+		}
 	}
+
+	// if (commandBuffer[0] - 48 == MAGNET_ON) {
+	// 	motorsDelegate->onMagnetOnRequest();
+	// }
 	
-	if (commandBuffer[0] - 48 == MAGNET_OFF) {
-		motorsDelegate->onMagnetOffRequest();
-	}
+	// if (commandBuffer[0] - 48 == MAGNET_OFF) {
+	// 	motorsDelegate->onMagnetOffRequest();
+	// }
 }
 
 void MessageController::checkMessage() {
@@ -100,4 +107,8 @@ void MessageController::setMotorsControllerMessageDelegate(MotorsControllerMessa
 
 void MessageController::setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate) {
 	switchesDelegate = delegate;
+}
+
+void MessageController::setSpeakerControllerMessageDelegate(SpeakerControllerMessageProtocol* delegate) {
+	speakerDelegate = delegate;
 }

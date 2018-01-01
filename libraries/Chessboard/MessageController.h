@@ -19,8 +19,7 @@ enum ServiceRequestType {
 	CASTLING,
 	SCAN_BOARD,
 	RESET_BOARD,
-	MAGNET_ON,
-	MAGNET_OFF
+	PLAY_SOUND
 };
 
 enum ServiceResponseType {
@@ -43,6 +42,7 @@ public:
 
 	void setMotorsControllerMessageDelegate(MotorsControllerMessageProtocol* delegate);
 	void setSwitchesControllerMessageDelegate(SwitchesControllerMessageProtocol* delegate);
+	void setSpeakerControllerMessageDelegate(SpeakerControllerMessageProtocol* delegate);
 
 	static MessageController* getInstance();
 
@@ -54,6 +54,7 @@ private:
 
 	MotorsControllerMessageProtocol* motorsDelegate;
 	SwitchesControllerMessageProtocol* switchesDelegate;
+	SpeakerControllerMessageProtocol* speakerDelegate;
 
 	MessageController() {}
 	static MessageController* instance;

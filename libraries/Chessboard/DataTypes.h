@@ -3,6 +3,15 @@
 
 #include <Arduino.h>
 
+enum SoundType {
+    SOUND_SYSTEM_READY,
+    SOUND_GAME_READY,
+    SOUND_VALID_MOVE,
+    SOUND_INVALID_MOVE,
+    SOUND_OFFPOSITION,
+    SOUND_MULTIPLEMOVE
+};
+
 enum CastlingType {
 	WHITE_QUEEN_SIDE,
 	WHITE_KING_SIDE,
