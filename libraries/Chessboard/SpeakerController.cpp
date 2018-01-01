@@ -1,5 +1,7 @@
 #include "SpeakerController.h"
 
+#include "MessageController.h"
+
 SpeakerController* SpeakerController::instance = NULL;
 
 SpeakerController* SpeakerController::getInstance() {
@@ -7,6 +9,7 @@ SpeakerController* SpeakerController::getInstance() {
 		instance = new SpeakerController();
 		pinMode(10, OUTPUT);
 		digitalWrite(10, HIGH);
+		MessageController::getInstance()->setSpeakerControllerMessageDelegate(this);
 	}
 	/*digitalWrite(10, LOW);
     delay(150);
