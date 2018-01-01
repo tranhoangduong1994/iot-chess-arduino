@@ -9,6 +9,8 @@ public:
 	virtual void onMoveRequest(Position from, Position to) = 0;
 	virtual void onCastlingRequest(CastlingType type) = 0;
 	virtual void onResetRequest() = 0;
+	virtual void onMagnetOnRequest() = 0;
+	virtual void onMagnetOffRequest() = 0;
 };
 
 class SwitchesControllerMessageProtocol {

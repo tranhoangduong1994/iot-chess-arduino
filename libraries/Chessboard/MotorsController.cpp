@@ -21,12 +21,15 @@
 const int QUICK_DELAY = 50;
 const int NORMAL_DELAY = 50;
 
-const int X0_OFFSET = 27;
+const int X0_OFFSET = 28;
 const int Y0_OFFSET = 0;
 
 const float SQUARE_SIZE = 39.625;
-const int MOVING_ADJUSTMENT_DISTANCE = 5;
-const int DIAGONAL_MOVING_ADJUSTMENT_DISTANCE = 4;
+const int MOVING_DOWN_ADJUSTMENT_DISTANCE = 7;
+const int MOVING_UP_ADJUSTMENT_DISTANCE = 3;
+const int MOVING_LEFT_ADJUSTMENT_DISTANCE = 5;
+const int MOVING_RIGHT_ADJUSTMENT_DISTANCE = 5;
+//const int DIAGONAL_MOVING_ADJUSTMENT_DISTANCE = 4;
 
 MotorsController* MotorsController::instance = NULL;
 bool MotorsController::isXMotorDisabled = false;
@@ -90,45 +93,49 @@ void MotorsController::init() {
 void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting) {
     if (beginState == ON) {
         digitalWrite(MAGNET, HIGH);
-        delay(1000);
+        delay(500);
     } else if (beginState == OFF) {
         digitalWrite(MAGNET, LOW);
-        delay(1000);
+        delay(500);
     }
 
     if (needPositionAdjusting) {
         if (target.y == currentPoint.y) {//horizontal
             if (target.x > currentPoint.x) {//moving right
-                target.x += MOVING_ADJUSTMENT_DISTANCE;
+                target.x += MOVING_RIGHT_ADJUSTMENT_DISTANCE;
             } else {//moving left
-                target.x -= MOVING_ADJUSTMENT_DISTANCE;
+                target.x -= MOVING_LEFT_ADJUSTMENT_DISTANCE;
                 if (target.x < 0) {
 					target.x = 0;
 				}
             }
         } else if (target.x == currentPoint.x) {//vertical
             if (target.y > currentPoint.y) {//moving up
-                target.y += MOVING_ADJUSTMENT_DISTANCE;
+                target.y += MOVING_UP_ADJUSTMENT_DISTANCE;
             } else {//moving down
-                target.y -= MOVING_ADJUSTMENT_DISTANCE;
+                target.y -= MOVING_DOWN_ADJUSTMENT_DISTANCE;
                 if (target.y < 0) {
 					target.y = 0;
 				}
             }
         } else {//diagonal
             if (target.x > currentPoint.x) {//moving right
-                target.x += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                //target.x += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                target.x += MOVING_RIGHT_ADJUSTMENT_DISTANCE;
             } else {//moving left
-                target.x -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                //target.x -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                target.x -= MOVING_LEFT_ADJUSTMENT_DISTANCE;
                 if (target.x < 0) {
 					target.x = 0;
 				}
             }
 
             if (target.y > currentPoint.y) {//moving up
-                target.y += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                //target.y += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                target.y += MOVING_UP_ADJUSTMENT_DISTANCE;
             } else {
-                target.y -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                //target.y -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
+                target.y -= MOVING_DOWN_ADJUSTMENT_DISTANCE;
                 if (target.y < 0) {
 					target.y = 0;
 				}                
@@ -211,10 +218,10 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
 
     if (endState == ON) {
         digitalWrite(MAGNET, HIGH);
-        delay(1000);
+        delay(500);
     } else if (endState == OFF) {
         digitalWrite(MAGNET, LOW);
-        delay(1000);
+        delay(500);
     }
 }
 
@@ -303,12 +310,12 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     // Point middlePoint2(toPoint.x - (SQUARE_SIZE / 2 - MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveLeft), toPoint.y - (SQUARE_SIZE / 2 - MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveDown));
     Point middlePoint1(fromPoint.x + (SQUARE_SIZE / 2) * pow(-1, moveLeft), fromPoint.y + (SQUARE_SIZE / 2) * pow(-1, moveDown));
     Point middlePoint2(toPoint.x - (SQUARE_SIZE / 2) * pow(-1, moveLeft), toPoint.y - (SQUARE_SIZE / 2) * pow(-1, moveDown));
-    Point toPointAdjusted(toPoint.x + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveLeft), toPoint.y + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveDown));
+    //Point toPointAdjusted(toPoint.x + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveLeft), toPoint.y + (MOVING_ADJUSTMENT_DISTANCE) * pow(-1, moveDown));
 
     moveTo(fromPoint, OFF, ON);
     moveTo(middlePoint1, UNCHANGED, UNCHANGED);
     moveTo(middlePoint2, UNCHANGED, UNCHANGED);
-    moveTo(toPointAdjusted, UNCHANGED, OFF);
+    moveTo(toPoint, UNCHANGED, OFF, true);
 }
 
 void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
@@ -431,4 +438,14 @@ void MotorsController::onResetRequest() {
     SwitchesController::getInstance()->scan();
     String bitboard = SwitchesController::getInstance()->getCurrentState().toString();
     MessageController::getInstance()->reply(RESET_DONE, bitboard);
+}
+
+void MotorsController::onMagnetOnRequest() {
+	Serial.println("onMagnetOnRequest|");
+	digitalWrite(MAGNET, HIGH);
+}
+
+void MotorsController::onMagnetOffRequest() {
+	Serial.println("onMagnetOffRequest|");
+	digitalWrite(MAGNET, LOW);
 }

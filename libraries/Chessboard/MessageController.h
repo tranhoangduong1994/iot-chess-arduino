@@ -18,7 +18,9 @@ enum ServiceRequestType {
 	MOVE,
 	CASTLING,
 	SCAN_BOARD,
-	RESET_BOARD
+	RESET_BOARD,
+	MAGNET_ON,
+	MAGNET_OFF
 };
 
 enum ServiceResponseType {

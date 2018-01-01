@@ -54,6 +54,14 @@ void MessageController::translateMessage() {
 			switchesDelegate->onResetRequest();
 		}
 	}
+	
+	if (commandBuffer[0] - 48 == MAGNET_ON) {
+		motorsDelegate->onMagnetOnRequest();
+	}
+	
+	if (commandBuffer[0] - 48 == MAGNET_OFF) {
+		motorsDelegate->onMagnetOffRequest();
+	}
 }
 
 void MessageController::checkMessage() {

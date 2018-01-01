@@ -16,6 +16,8 @@ public:
     void onMoveRequest(Position from, Position to) override;
     void onCastlingRequest(CastlingType type) override;
     void onResetRequest() override;
+    void onMagnetOnRequest() override;
+    void onMagnetOffRequest() override;
 
     static MotorsController* getInstance();
 
