@@ -9,7 +9,7 @@ SpeakerController* SpeakerController::getInstance() {
 		instance = new SpeakerController();
 		pinMode(10, OUTPUT);
 		digitalWrite(10, HIGH);
-		MessageController::getInstance()->setSpeakerControllerMessageDelegate(this);
+		MessageController::getInstance()->setSpeakerControllerMessageDelegate(instance);
 	}
 	/*digitalWrite(10, LOW);
     delay(150);
