@@ -11,9 +11,11 @@ class MotorsController : public MotorsControllerMessageProtocol {
 public:
     void moveToOrigin();
     void movePiece(Position from, Position to, bool isKnight = false);
+    void removePiece(Position pos);
     void capturePiece(Position from, Position to, bool isKnight = false);
 
     void onMoveRequest(Position from, Position to) override;
+    void onEnPassantRequest(Position from, Position to) override;
     void onCastlingRequest(CastlingType type) override;
     void onResetRequest() override;
     void onMagnetOnRequest() override;

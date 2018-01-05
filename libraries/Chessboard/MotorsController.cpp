@@ -320,29 +320,31 @@ void MotorsController::movePiece(Position from, Position to, bool isKnight) {
     moveTo(toPoint, UNCHANGED, OFF, true);
 }
 
-void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
-    Point fromPoint = getPointByPosition(from);
-    Point toPoint = getPointByPosition(to);
+void MotorsController::removePiece(Position pos) {
+    Point point = getPointByPosition(pos);
 
     Point sideSquare = getPointByPosition(Position('h', to.rank));
     sideSquare.x += SQUARE_SIZE;
     
     Point middlePoint;
-    middlePoint.x = toPoint.x + SQUARE_SIZE / 2;
+    middlePoint.x = point.x + SQUARE_SIZE / 2;
     
     if (to.rank > 4) {
-		sideSquare.y -= SQUARE_SIZE / 2;
-		middlePoint.y = toPoint.y - SQUARE_SIZE / 2; 
-	} else {
-		sideSquare.y += SQUARE_SIZE / 2;
-		middlePoint.y = toPoint.y + SQUARE_SIZE / 2; 
-	}
-	
+        sideSquare.y -= SQUARE_SIZE / 2;
+        middlePoint.y = point.y - SQUARE_SIZE / 2; 
+    } else {
+        sideSquare.y += SQUARE_SIZE / 2;
+        middlePoint.y = point.y + SQUARE_SIZE / 2; 
+    }
+    
     //performing capture
-    moveTo(toPoint, OFF, ON);
+    moveTo(point, OFF, ON);
     moveTo(middlePoint, UNCHANGED, UNCHANGED);
     moveTo(sideSquare, UNCHANGED, OFF);
+}
 
+void MotorsController::capturePiece(Position from, Position to, bool isKnight) {
+    removePiece(to);
     movePiece(from, to, isKnight);
 }
 
@@ -366,6 +368,17 @@ void MotorsController::onMoveRequest(Position from, Position to) {
     } else {
         movePiece(from, to, isKnight);
     }
+
+    SwitchesController::getInstance()->scan();
+    Bitboard newBitboard = SwitchesController::getInstance()->getCurrentState();
+    MessageController::getInstance()->reply(MOVE_DONE, from.toString() + to.toString() + newBitboard.toString());
+}
+
+void MotorsController::onEnPassantRequest(Position from, Position to) {
+    Position capturedPiecePos(to.file, from.rank);
+
+    removePiece(capturedPiecePos);
+    movePiece(from, to);
 
     SwitchesController::getInstance()->scan();
     Bitboard newBitboard = SwitchesController::getInstance()->getCurrentState();

@@ -33,6 +33,16 @@ void MessageController::translateMessage() {
 		}
 	}	
 
+	if (commandBuffer[0] - 48 == EN_PASSANT) {
+		char fromFile = commandBuffer[1];
+		int fromRank = commandBuffer[2] - 48;
+		char toFile = commandBuffer[3];
+		int toRank = commandBuffer[4] - 48;
+		if (motorsDelegate) {
+			motorsDelegate->onEnPassantRequest(Position(fromFile, fromRank), Position(toFile, toRank));
+		}
+	}	
+
 	if (commandBuffer[0] - 48 == CASTLING) {
 		int type = commandBuffer[1] - 48;
 		if (motorsDelegate) {
