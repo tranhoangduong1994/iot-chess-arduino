@@ -19,7 +19,9 @@ enum ServiceRequestType {
 	CASTLING,
 	SCAN_BOARD,
 	RESET_BOARD,
-	PLAY_SOUND
+	PLAY_SOUND,
+	MAGNET_ON,
+	MAGNET_OFF
 };
 
 enum ServiceResponseType {

@@ -20,15 +20,18 @@
 
 const int QUICK_DELAY = 50;
 const int NORMAL_DELAY = 50;
+const int SLOW_DELAY = 100;
 
 const int X0_OFFSET = 28;
-const int Y0_OFFSET = 0;
+const int Y0_OFFSET = 7;
 
 const float SQUARE_SIZE = 39.625;
 const int MOVING_DOWN_ADJUSTMENT_DISTANCE = 7;
 const int MOVING_UP_ADJUSTMENT_DISTANCE = 3;
 const int MOVING_LEFT_ADJUSTMENT_DISTANCE = 5;
 const int MOVING_RIGHT_ADJUSTMENT_DISTANCE = 5;
+const int MOVING_DIAGONALLY_DOWN_ADJUSTMENT_DISTANCE = 7;
+const int MOVING_DIAGONALLY_RIGHT_ADJUSTMENT_DISTANCE = 4;
 //const int DIAGONAL_MOVING_ADJUSTMENT_DISTANCE = 4;
 
 MotorsController* MotorsController::instance = NULL;
@@ -93,10 +96,10 @@ void MotorsController::init() {
 void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState endState, bool needPositionAdjusting) {
     if (beginState == ON) {
         digitalWrite(MAGNET, HIGH);
-        delay(500);
+        delay(1000);
     } else if (beginState == OFF) {
         digitalWrite(MAGNET, LOW);
-        delay(500);
+        delay(1000);
     }
 
     if (needPositionAdjusting) {
@@ -120,10 +123,8 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
             }
         } else {//diagonal
             if (target.x > currentPoint.x) {//moving right
-                //target.x += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
-                target.x += MOVING_RIGHT_ADJUSTMENT_DISTANCE;
+                target.x += MOVING_DIAGONALLY_RIGHT_ADJUSTMENT_DISTANCE;
             } else {//moving left
-                //target.x -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
                 target.x -= MOVING_LEFT_ADJUSTMENT_DISTANCE;
                 if (target.x < 0) {
 					target.x = 0;
@@ -131,11 +132,9 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
             }
 
             if (target.y > currentPoint.y) {//moving up
-                //target.y += DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
                 target.y += MOVING_UP_ADJUSTMENT_DISTANCE;
             } else {
-                //target.y -= DIAGONAL_MOVING_ADJUSTMENT_DISTANCE;
-                target.y -= MOVING_DOWN_ADJUSTMENT_DISTANCE;
+                target.y -= MOVING_DIAGONALLY_DOWN_ADJUSTMENT_DISTANCE;
                 if (target.y < 0) {
 					target.y = 0;
 				}                
@@ -151,6 +150,9 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
     if (squareSum >= (3 * SQUARE_SIZE) * (3 * SQUARE_SIZE)) {
         delayDuration = QUICK_DELAY;
     }
+    if (squareSum <= (0.5 * SQUARE_SIZE) * (0.5 * SQUARE_SIZE)) {
+		delayDuration = SLOW_DELAY;
+	}
 
     if (distanceX > 0) {
         digitalWrite(DIR_X, LOW);
@@ -218,10 +220,10 @@ void MotorsController::moveTo(Point target, MagnetState beginState, MagnetState 
 
     if (endState == ON) {
         digitalWrite(MAGNET, HIGH);
-        delay(500);
+        delay(1000);
     } else if (endState == OFF) {
         digitalWrite(MAGNET, LOW);
-        delay(500);
+        delay(1000);
     }
 }
 
